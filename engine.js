@@ -71,44 +71,74 @@ class Vector {
         return (obj) instanceof Vector;
     }
 
+    clone() {
+        return new Vector(this.x, this.y);
+    }
+
     add(_addition) {
-        let t = new Vector(this.x, this.y);
-        if (Vector.isVector(_addition)) {
-            t.x += _addition.x;
-            t.y += _addition.y;
-        } else {
-            t.x += _addition;
-            t.y += _addition;
-        }
-        return t;
+        return Vector.isVector(_addition) 
+            ? new Vector(this.x + _addition.x, this.y + _addition.y)
+            : new Vector(this.x + _addition, this.y + _addition);
+    }
+
+    substract(_substraction) {
+        return Vector.isVector(_substraction) 
+            ? new Vector(this.x - _substraction.x, this.y - _substraction.y)
+            : new Vector(this.x - _substraction, this.y - _substraction);
     }
 
     multiply(_multiplier) {
-        let t = new Vector(this.x, this.y);
-        if (Vector.isVector(_multiplier)) {
-            let t = new Vector(this.x, this.y)
-            t.x *= _multiplier.x;
-            t.y *= _multiplier.y;
-        } else {
-            t.x *= _multiplier;
-            t.y *= _multiplier;
-        }
-        return t;
+        return Vector.isVector(_multiplier) 
+            ? new Vector(this.x * _multiplier.x, this.y * _multiplier.y)
+            : new Vector(this.x * _multiplier, this.y * _multiplier);
+    }
+
+    divide(_divider) {
+        return Vector.isVector(_divider) 
+            ? new Vector(this.x / _divider.x, this.y / _divider.y)
+            : new Vector(this.x / _divider, this.y / _divider);
+    }
+
+    equals(other) {
+        return this.x == other.x && this.y == other.y;
+    }
+
+    align_to_grid(_gridDimensions) {
+        return Vector.isVector(_gridDimensions)
+            ? new Vector(this.x - (this.x % _gridDimensions.x), this.y - (this.y % _gridDimensions.y))
+            : new Vector(this.x - (this.x % _gridDimensions), this.y - (this.y % _gridDimensions));
+    }
+
+    toString(){
+        return `X: ${this.x} Y: ${this.y}`;
     }
 }
+Vector.up = new Vector(0, -1);
+Vector.down = new Vector(0, 1);
+Vector.left = new Vector(-1, 0);
+Vector.right = new Vector(1, 0);
 
 class Element {
     constructor() {
         this.style = "#AA00AA";
-        this.position = new Vector();
-        console.log(this.position);
-        this.width = 10;
-        this.height = 10;
-
-        this.velocity = new Vector();
+        this.position = new Vector(0, 0);
+        this.velocity = new Vector(0, 0);
     }
     apply_velocity(delta) {
         this.position = this.position.add(this.velocity.multiply(delta));
+    }
+    wrap_screen() {
+        this.position.x = this.position.x % canvas.size().x;
+        this.position.y = this.position.y % canvas.size().y;
+        while(this.position.x < 0) {
+            this.position.x += canvas.size().x;
+        }
+        while(this.position.y < 0) {
+            this.position.y += canvas.size().y;
+        }
+    }
+    update(delta) {
+        this.apply_velocity(delta);
     }
     draw() {
         Error('Draw function needs to be defined')
@@ -118,17 +148,13 @@ class Element {
 class Rectangle extends Element {
     constructor() {
         super();
-        this.width = 60;
-        this.height = 60;
-        this.velocity = new Vector(50, 50);
-    }
-    wrap_screen() {
-        this.position.x = this.position.x % canvas.size().x;
-        this.position.y = this.position.y % canvas.size().y;
+        this.width = 0;
+        this.height = 0;
+        this.velocity = new Vector(0, 0);
     }
 
     update(delta) {
-        this.apply_velocity(delta);
+        super.update(delta);
         this.wrap_screen();
     }
 
@@ -138,19 +164,77 @@ class Rectangle extends Element {
     }
 };
 
-class Player {
-    constructor() {
+class Trail extends Rectangle {
+    constructor(_position) {
+        super();
+        this.position = _position;
+        this.width = 40;
+        this.height = 40;
+        this.style="#FF00BB";
+    }
+    update(delta) {
+        super.update(delta);
+    }
+}
 
+class Snake extends Element {
+    constructor() {
+        super();
+        this.width = this.height = 50;
+        this.segments = [];
+        this.trail_length = 3;
+
+        dom.events.keydown((key) => this.switch_direction(key));
+
+        this.speed = 350;
+
+        this.direction = Vector.right;
+        this.velocity = this.direction.multiply(this.speed);
+        console.log(['player', this]);
+    }
+
+    trail(){
+        // Trail which follows player
+        let grid_aligned_position = this.position.align_to_grid(this.width);
+        if(this.segments.filter(x => x.position.equals(grid_aligned_position)).length == 0) {
+            this.segments.push(new Trail(grid_aligned_position));
+        }
+        // Limit trail to the specific length
+        while(this.segments.length > this.trail_length) {
+            this.segments.shift();
+        }
+    }
+
+    switch_direction(key_event) {
+        switch(key_event.key) {
+            case 'ArrowUp':
+                this.direction = this.direction.equals(Vector.down) ? Vector.down : Vector.up;
+                break;
+            case 'ArrowDown':
+                this.direction = this.direction.equals(Vector.up) ? Vector.up: Vector.down;
+                break;
+            case 'ArrowLeft':
+                this.direction = this.direction.equals(Vector.right) ? Vector.right : Vector.left;
+                break;
+            case 'ArrowRight':
+                this.direction = this.direction.equals(Vector.left) ? Vector.left : Vector.right;
+                break;
+        }
+        this.velocity = this.direction.multiply(this.speed);
     }
 
     draw(delta) {
-
+        super.draw(delta);
+        this.segments.forEach(segment => segment.draw(delta));
     }
 
     update(delta) {
-
+        super.update(delta);
+        this.wrap_screen();
+        this.trail();
+        this.segments.forEach(segment => segment.update(delta));
     }
-}
+};
 
 
 const engine = (function() {
@@ -163,9 +247,9 @@ const engine = (function() {
         this.elements.forEach(e => e.draw(delta));
     }
 
+    // Being a time lord here
     let last_tick = performance.now();
     self.total_time = 0;
-
     this.ticker = () => {
         // Aiming for 60fps
         setInterval(() => {
@@ -179,10 +263,9 @@ const engine = (function() {
 
     this.init = () => {
         this.ticker();
-
-        var player = new Rectangle();
-
-        this.elements.push(player);
+        // Register player
+        var snake = new Snake();
+        this.elements.push(snake);
     };
 
     this.init();

@@ -120,7 +120,7 @@ Vector.right = new Vector(1, 0);
 
 class Element {
     constructor() {
-        this.style = "#AA00AA";
+        this.style = "#FF00FF";
         this.position = new Vector(0, 0);
         this.velocity = new Vector(0, 0);
     }
@@ -148,9 +148,8 @@ class Element {
 class Rectangle extends Element {
     constructor() {
         super();
-        this.width = 0;
-        this.height = 0;
         this.velocity = new Vector(0, 0);
+        this.dimensions = new Vector(0,0);
     }
 
     update(delta) {
@@ -160,7 +159,7 @@ class Rectangle extends Element {
 
     draw(delta) {
         ctx().fillStyle = this.style;
-        ctx().fillRect(this.position.x, this.position.y, this.width, this.height);
+        ctx().fillRect(this.position.x, this.position.y, this.dimensions.x, this.dimensions.y);
     }
 };
 
@@ -168,8 +167,8 @@ class Trail extends Rectangle {
     constructor(_position) {
         super();
         this.position = _position;
-        this.width = 40;
-        this.height = 40;
+        this.dimensions.x = 40;
+        this.dimensions.y = 40;
         this.style="#FF00BB";
     }
     update(delta) {
@@ -180,22 +179,23 @@ class Trail extends Rectangle {
 class Snake extends Element {
     constructor() {
         super();
-        this.width = this.height = 50;
+        this.chunk_size = new Vector(40, 40);
+        this.position = new Vector(0,0);
         this.segments = [];
         this.trail_length = 3;
 
-        dom.events.keydown((key) => this.switch_direction(key));
-
+        // Movement
         this.speed = 350;
-
         this.direction = Vector.right;
         this.velocity = this.direction.multiply(this.speed);
-        console.log(['player', this]);
+
+        // Events
+        dom.events.keyup(x => this.switch_direction(x));
     }
 
     trail(){
         // Trail which follows player
-        let grid_aligned_position = this.position.align_to_grid(this.width);
+        let grid_aligned_position = this.position.align_to_grid(this.chunk_size);
         if(this.segments.filter(x => x.position.equals(grid_aligned_position)).length == 0) {
             this.segments.push(new Trail(grid_aligned_position));
         }
@@ -224,7 +224,7 @@ class Snake extends Element {
     }
 
     draw(delta) {
-        super.draw(delta);
+        //super.draw(delta);
         this.segments.forEach(segment => segment.draw(delta));
     }
 
@@ -236,6 +236,21 @@ class Snake extends Element {
     }
 };
 
+class Mouse extends Rectangle {
+    constructor(){
+        super();
+        this.position.x = Math.random() * canvas.size().x;
+        this.position.y = Math.random() * canvas.size().y;
+        this.dimensions.x = 40;
+        this.dimensions.y = 40;
+        this.position = this.position.align_to_grid(this.dimensions);
+        this.style= "#FF3300";
+    }
+}
+
+function aabb(a_posistion, a_dimensions, b_position, b_dimensions) {
+
+}
 
 const engine = (function() {
     this.elements = [];
@@ -264,8 +279,20 @@ const engine = (function() {
     this.init = () => {
         this.ticker();
         // Register player
-        var snake = new Snake();
-        this.elements.push(snake);
+        this.elements.push(new Snake());
+        // Add some mice
+        this.elements.push(new Mouse());
+        this.elements.push(new Mouse());
+        this.elements.push(new Mouse());
+
+        // ssimple collision
+        for(let e1 in this.elements) {
+            for(let e2 in this.elements) {
+                if(e1 instanceof Snake && e2 instanceof Mouse) {
+
+                }
+            }
+        }
     };
 
     this.init();

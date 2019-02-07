@@ -31,6 +31,12 @@ class Canvas {
     static ctx() {
         return Canvas.context;
     }
+
+    static drawText(x, y, text) {
+        Canvas.ctx().fillStyle = "#FFFFFF"
+        Canvas.ctx().font = "30px Arial";
+        Canvas.ctx().fillText(text, x, y);
+    }
 }
 Canvas.Init();
 

@@ -14,6 +14,7 @@ export default class Engine {
             this.last_tick = this_tick;
             this.total_time += delta;
             this.draw(delta / 1000);
+            Canvas.drawText(100, 100, Math.round(1000 / delta));
         }, 1000 / 60);
         this.init_game();
     }

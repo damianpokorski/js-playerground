@@ -1,3 +1,5 @@
+import {Element, Vector, Canvas} from "source/import";
+
 class Rectangle extends Element {
     constructor() {
         super();
@@ -11,8 +13,8 @@ class Rectangle extends Element {
     }
 
     draw(delta) {
-        ctx().fillStyle = this.style;
-        ctx().fillRect(this.position.x, this.position.y, this.dimensions.x, this.dimensions.y);
+        Canvas.ctx().fillStyle = this.style;
+        Canvas.ctx().fillRect(this.position.x, this.position.y, this.dimensions.x, this.dimensions.y);
     }
 };
 

@@ -9,12 +9,11 @@ class Snake extends Element {
         this.trail_length = 3;
 
         // Movement
-        this.speed = 350;
+        this.speed = 400;
         this.direction = Vector.right;
         this.velocity = this.direction.multiply(this.speed);
 
         // Events
-        console.log(Dom, Dom.Events);
         Dom.Events.keyup(x => this.switch_direction(x));
     }
 
@@ -22,9 +21,7 @@ class Snake extends Element {
         // Trail which follows player
         let grid_aligned_position = this.position.align_to_grid(this.chunk_size);
         if (this.segments.filter(x => x.position.equals(grid_aligned_position)).length == 0) {
-            console.log(new Rectangle());
-            var t = new Trail();
-            this.segments.push(t);
+            this.segments.push(new Trail(grid_aligned_position));
         }
         // Limit trail to the specific length
         while (this.segments.length > this.trail_length) {

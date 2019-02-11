@@ -1,4 +1,4 @@
-import "source/import"
+import { Canvas } from "source/import";
 
 export default class Vector {
     constructor(_x = 0, _y = 0) {
@@ -46,6 +46,14 @@ export default class Vector {
         return Vector.isVector(_gridDimensions) ?
             new Vector(this.x - (this.x % _gridDimensions.x), this.y - (this.y % _gridDimensions.y)) :
             new Vector(this.x - (this.x % _gridDimensions), this.y - (this.y % _gridDimensions));
+    }
+
+    static random_within_canvas() {
+        let boundaries = Canvas.size();
+        return new Vector(
+            Math.random() * boundaries.x,
+            Math.random() * boundaries.y
+        );
     }
 
     toString() {

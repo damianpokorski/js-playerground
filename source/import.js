@@ -9,7 +9,6 @@ import Snake from 'source/game/elements/snake';
 import Mouse from 'source/game/elements/mouse';
 
 import Engine from 'source/engine/engine';
-import Game from 'source/game/game';
 
 export {
     Dom as Dom,
@@ -20,6 +19,5 @@ export {
     Trail as Trail,
     Snake as Snake,
     Mouse as Mouse,
-    Engine as Engine,
-    Game as Game
+    Engine as Engine
 };

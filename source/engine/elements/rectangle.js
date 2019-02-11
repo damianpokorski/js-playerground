@@ -1,4 +1,4 @@
-import {Element, Vector, Canvas} from "source/import";
+import { Element, Vector, Canvas } from "source/import";
 
 class Rectangle extends Element {
     constructor() {
@@ -15,6 +15,18 @@ class Rectangle extends Element {
     draw(delta) {
         Canvas.ctx().fillStyle = this.style;
         Canvas.ctx().fillRect(this.position.x, this.position.y, this.dimensions.x, this.dimensions.y);
+    }
+
+    collide(other) {
+        if (
+            this.position.x < other.position.x + other.dimensions.x &&
+            this.position.y < other.position.y + other.dimensions.y &&
+            this.position.x + this.dimensions.x > other.position.x &&
+            this.position.y + this.dimensions.y > other.position.y
+        ) {
+            return true;
+        }
+        return false;
     }
 };
 

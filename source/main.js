@@ -1,5 +1,5 @@
-import { Engine, Game } from "source/import";
-import SnakeGame from "source/game/game";
+import { Engine } from 'source/import';
+import SnakeGame from 'source/game/game';
 
 const e = new Engine();
-e.load_game(new SnakeGame());
+e.loadGame(new SnakeGame());

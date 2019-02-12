@@ -1,13 +1,13 @@
-import { Vector } from "source/import"
+import { Vector } from 'source/import';
 
-let chunk_size = new Vector(25, 25);
-let trail_length = 5;
-let player_speed = 250;
-let player_speed_boost = 25;
+const chunkSize = new Vector(25, 25);
+const trailLength = 5;
+const playerSpeed = 250;
+const playerSpeedBoost = 25;
 
 export {
-    chunk_size,
-    trail_length,
-    player_speed,
-    player_speed_boost
+  chunkSize,
+  trailLength,
+  playerSpeed,
+  playerSpeedBoost,
 };

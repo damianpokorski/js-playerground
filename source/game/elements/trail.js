@@ -1,16 +1,18 @@
-import { Rectangle } from "source/import";
+import { Rectangle } from 'source/import';
 
-import * as GameConfig from "source/game/config";
+import * as GameConfig from 'source/game/config';
+
 class Trail extends Rectangle {
-    constructor(_position) {
-        super();
-        this.position = _position;
-        this.dimensions = GameConfig.chunk_size;
-        this.style = "#22FF22";
-    }
-    update(delta) {
-        super.update(delta);
-    }
+  constructor(_position) {
+    super();
+    this.position = _position;
+    this.dimensions = GameConfig.chunkSize;
+    this.style = '#22FF22';
+  }
+
+  update(delta) {
+    super.update(delta);
+  }
 }
 
-export { Trail as default }
+export { Trail as default };

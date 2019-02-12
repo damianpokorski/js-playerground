@@ -2,10 +2,13 @@
   "name": "jsplayground",
   "version": "1.0.0",
   "description": "Just a JS Playground",
-  "main": "index.js",
+  "main": "source/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx webpack --config webpack.config.js --mode development --watch"
+    "dev": "npx webpack --config webpack.config.js --mode development --watch",
+    "build": "npx webpack --config webpack.config.js",
+    "lint": "npx -c 'eslint source/* --quiet' --quiet",
+    "lint-watch": "npx esw --quiet source/* --watch --clear --cache"
   },
   "repository": {
     "type": "git",
@@ -22,6 +25,10 @@
     "@babel/polyfill": "^7.2.5",
     "@babel/preset-env": "^7.3.1",
     "babel-loader": "^8.0.5",
+    "eslint": "^5.13.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-watch": "^4.0.2",
     "webpack": "^4.29.3",
     "webpack-cli": "^3.2.3"
   },

@@ -1,5 +1,5 @@
 import { Snake, Mouse } from "source/import";
-
+import * as GameConfig from "source/game/config";
 export default class SnakeGame {
     constructor() {
 

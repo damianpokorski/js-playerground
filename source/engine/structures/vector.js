@@ -48,11 +48,24 @@ export default class Vector {
             new Vector(this.x - (this.x % _gridDimensions), this.y - (this.y % _gridDimensions));
     }
 
-    static random_within_canvas() {
+    static random_within_canvas(padding = 0) {
         let boundaries = Canvas.size();
+
         return new Vector(
-            Math.random() * boundaries.x,
-            Math.random() * boundaries.y
+            Math.max(
+                padding,
+                Math.min(
+                    Math.random() * boundaries.x,
+                    boundaries.x - padding
+                ),
+            ),
+            Math.max(
+                padding,
+                Math.min(
+                    Math.random() * boundaries.y,
+                    boundaries.y - padding
+                ),
+            )
         );
     }
 

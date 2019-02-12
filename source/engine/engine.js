@@ -10,24 +10,28 @@ export default class Engine {
     }
     load_game(game) {
         this.game = game;
-        this.start_clock();
+        this.tick();
     }
 
-    start_clock() {
-        // Aiming for 60fps
-        this.clock_id = setInterval(() => {
-            let this_tick = performance.now();
-            let delta = this_tick - this.last_tick;
-            this.last_tick = this_tick;
-            this.total_time += delta;
-            this.update(delta / 1000);
-            this.draw(delta / 1000);
-            this.draw_fps && Canvas.drawText(100, 100, Math.round(1000 / delta));
-        }, 1000 / 60);
+    requestFrame(callback) {
+        let handler = window.requestAnimationFrame ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            function(callback) {
+                window.setTimeout(callback, 1000 / 60);
+            };
+        handler(callback);
     }
 
-    stop_clock() {
-        clearInterval(this.clock_id);
+    tick() {
+        this.requestFrame(() => this.tick());
+        let this_tick = performance.now();
+        let delta = this_tick - this.last_tick;
+        this.last_tick = this_tick;
+        this.total_time += delta;
+        this.update(delta / 1000);
+        this.draw(delta / 1000);
+        this.draw_fps && Canvas.drawText(100, 100, Math.round(1000 / delta));
     }
 
     draw(delta) {
@@ -37,16 +41,5 @@ export default class Engine {
 
     update(delta) {
         this.game.update(delta);
-    }
-
-    collision_detection() {
-        // simple collision
-        for (let e1 in this.elements) {
-            for (let e2 in this.elements) {
-                if (e1 instanceof Snake && e2 instanceof Mouse) {
-
-                }
-            }
-        }
     }
 }

@@ -1,31 +1,34 @@
 import { Vector, Element, Dom, Rectangle, Trail } from "source/import"
 
 import * as GameConfig from "source/game/config";
+import { inherits } from "util";
 
 class Snake extends Element {
     constructor() {
         super();
-        this.chunk_size = GameConfig.chunk_size;
-        this.position = new Vector(0, 0);
-        this.segments = [];
-        this.trail_length = GameConfig.trail_length;
-
-
-        // Movement
-        this.speed = GameConfig.player_speed;
-        this.direction = Vector.right;
-        this.velocity = this.direction.multiply(this.speed);
-
+        // Assume defaults
+        this.reset();
         // Events
         Dom.Events.keyup(x => this.switch_direction(x));
+
+    }
+
+    hasTrail() {
+        return this.segments.length > 0;
+    }
+
+    frontSegment() {
+        return this.segments[this.segments.length - 1];
     }
 
     trail() {
-        // Trail which follows player
-        let grid_aligned_position = this.position.align_to_grid(this.chunk_size);
-        if (this.segments.length == 0 || !this.segments[this.segments.length - 1].position.equals(grid_aligned_position)) {
+        // Trail which follows player - align pixel perfect moving position to grid. 
+        let grid_aligned_position = this.position.align_to_grid(GameConfig.chunk_size);
+        if (!this.hasTrail() || !this.frontSegment().position.equals(grid_aligned_position)) {
             this.segments.push(new Trail(grid_aligned_position));
+            this.calculateVelocity();
         }
+
         // Limit trail to the specific length
         while (this.segments.length > this.trail_length) {
             this.segments.shift();
@@ -47,6 +50,11 @@ class Snake extends Element {
                 this.direction = this.direction.equals(Vector.left) ? Vector.left : Vector.right;
                 break;
         }
+        this.calculateVelocity();
+    }
+
+    calculateVelocity() {
+        this.speed = GameConfig.player_speed + (GameConfig.player_speed_boost) * this.segments.length;
         this.velocity = this.direction.multiply(this.speed);
     }
 
@@ -76,12 +84,16 @@ class Snake extends Element {
         }
     }
     reset() {
+        // Reset all of the properties
         this.trail_length = 3;
         this.segments = [];
+        this.speed = GameConfig.player_speed;
         this.position = Vector
-            .random_within_canvas()
+            .random_within_canvas(GameConfig.chunk_size.x)
             .align_to_grid(GameConfig.chunk_size);
-        console.log(this.position);
+
+        this.direction = Vector.right;
+        this.calculateVelocity();
     }
 }
 

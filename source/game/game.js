@@ -1,7 +1,17 @@
-import { Snake, Mouse } from 'source/import';
+import {
+  Dom, Snake, Mouse, Canvas,
+} from 'source/import';
 
 export default class SnakeGame {
   constructor() {
+    this.init();
+    Dom.Events.resize(() => this.init());
+
+    this.font = 'Press Start 2P';
+    Dom.Helper.LoadGoogleFont(this.font);
+  }
+
+  init() {
     // Register player
     this.player = new Snake();
 
@@ -13,6 +23,16 @@ export default class SnakeGame {
   draw() {
     this.player.draw();
     this.elements.forEach(e => e.draw());
+    this.drawUI();
+  }
+
+  calculateScore() {
+    return (this.player.segments.length - 3) * 125;
+  }
+
+  drawUI() {
+    Canvas.drawText(64, 64, 'Score', '#FFFFFF', '18px', this.font);
+    Canvas.drawText(64, 96, this.calculateScore(), '#FFFFFF', '24px', this.font);
   }
 
   update(delta) {

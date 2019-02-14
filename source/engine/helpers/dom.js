@@ -1,38 +1,68 @@
 import 'source/import';
 
 class Dom {
-
+  static create(tag, properties = {}) {
+    const e = document.createElement(tag);
+    Object.keys(properties)
+      .forEach((key) => {
+        e[key] = properties[key];
+      });
+    return e;
+  }
 }
 
 Dom.Get = class {
-  static FirstOfTag(tag) {
+  static firstOfTag(tag) {
     return (document.getElementsByTagName(tag)[0]);
   }
 
-  static Id(id) {
+  static id(id) {
     return document.getElementById(id);
   }
 
   static body() {
-    return Dom.Get.FirstOfTag('body');
+    return Dom.Get.firstOfTag('body');
+  }
+
+  static head() {
+    return Dom.Get.firstOfTag('head');
   }
 };
 
+function windowAddEventListener(eventName, func) {
+  return window.addEventListener(eventName, func, true);
+}
+
 Dom.Events = class {
   static resize(func) {
-    window.addEventListener('resize', func, true);
+    windowAddEventListener('resize', func);
+  }
+
+  static load(func) {
+    windowAddEventListener('onload', func);
   }
 
   static keyup(func) {
-    window.addEventListener('keyup', func, true);
+    windowAddEventListener('keyup', func);
   }
 
   static keydown(func) {
-    window.addEventListener('keydown', func, true);
+    windowAddEventListener('keydown', func);
   }
 
   static click(func) {
-    window.addEventListener('click', func, true);
+    windowAddEventListener('click', func);
+  }
+};
+
+Dom.Helper = class {
+  static LoadGoogleFont(fontName) {
+    Dom.Get.head().appendChild(
+      Dom.create('link', {
+        href: `https://fonts.googleapis.com/css?family=${encodeURI(fontName)}`,
+        rel: 'stylesheet',
+      }),
+    );
   }
 };
 

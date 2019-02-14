@@ -3,11 +3,11 @@ import { Dom } from 'source/import';
 class Canvas {
   static Init() {
     Canvas.clear_color = '#000000';
-    Canvas.dom = document.createElement('canvas');
-    Canvas.dom.id = 'engine';
+    Canvas.dom = Dom.create('canvas', { id: 'engine' });
     Dom.Get.body().appendChild(Canvas.dom);
     Canvas.context = Canvas.dom.getContext('2d');
     Canvas.resize();
+    Dom.Events.resize(Canvas.resize);
   }
 
   static resize() {
@@ -34,9 +34,9 @@ class Canvas {
     return Canvas.context;
   }
 
-  static drawText(x, y, text) {
-    Canvas.ctx().fillStyle = '#FFFFFF';
-    Canvas.ctx().font = '30px Arial';
+  static drawText(x, y, text, color = '#FFFFFF', fontSize = '32px', fontFamily = ' Arial') {
+    Canvas.ctx().fillStyle = color;
+    Canvas.ctx().font = `${fontSize} '${fontFamily}'`;
     Canvas.ctx().fillText(text, x, y);
   }
 }

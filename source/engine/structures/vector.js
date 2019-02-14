@@ -20,10 +20,10 @@ export default class Vector {
       : new Vector(this.x + _addition, this.y + _addition);
   }
 
-  substract(_substraction) {
-    return Vector.isVector(_substraction)
-      ? new Vector(this.x - _substraction.x, this.y - _substraction.y)
-      : new Vector(this.x - _substraction, this.y - _substraction);
+  subtract(_subtraction) {
+    return Vector.isVector(_subtraction)
+      ? new Vector(this.x - _subtraction.x, this.y - _subtraction.y)
+      : new Vector(this.x - _subtraction, this.y - _subtraction);
   }
 
   multiply(_multiplier) {

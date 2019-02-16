@@ -29,34 +29,58 @@ Dom.Get = class {
   }
 };
 
-function windowAddEventListener(eventName, func) {
-  return window.addEventListener(eventName, func, true);
+function windowListener(eventName, func) {
+  return window.addEventListener(eventName, func, false);
+}
+
+function documentListener(eventName, func) {
+  return document.addEventListener(eventName, func, false);
 }
 
 Dom.Events = class {
   static resize(func) {
-    windowAddEventListener('resize', func);
+    windowListener('resize', func);
   }
 
-  static load(func) {
-    windowAddEventListener('onload', func);
+  static loaded(func) {
+    if (document.readyState === 'complete') {
+      func();
+      return;
+    }
+    documentListener('readystatechange', () => {
+      if (document.readyState === 'complete') {
+        func();
+      }
+    });
   }
 
   static keyup(func) {
-    windowAddEventListener('keyup', func);
+    windowListener('keyup', func);
   }
 
   static keydown(func) {
-    windowAddEventListener('keydown', func);
+    windowListener('keydown', func);
   }
 
   static click(func) {
-    windowAddEventListener('click', func);
+    windowListener('click', func);
   }
 };
 
 Dom.Helper = class {
   static LoadGoogleFont(fontName) {
+    // Define static list of fonts which are already loaded
+    if (typeof Dom.Helper.LoadGoogleFont.LoadedFonts === 'undefined') {
+      Dom.Helper.LoadGoogleFont.LoadedFonts = [];
+    }
+
+    // Check if the font has been previously loaded
+    if (Dom.Helper.LoadGoogleFont.LoadedFonts.some(font => font === fontName)) {
+      return;
+    }
+    Dom.Helper.LoadGoogleFont.LoadedFonts.push(fontName);
+
+    // Load font by create link within document head
     Dom.Get.head().appendChild(
       Dom.create('link', {
         href: `https://fonts.googleapis.com/css?family=${encodeURI(fontName)}`,

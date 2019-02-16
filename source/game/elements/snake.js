@@ -22,10 +22,14 @@ class Snake extends Element {
     return this.segments[this.segments.length - 1];
   }
 
+  enteredNewChunk() {
+    return !this.frontSegment().position.equals(this.position.alignToGrid(GameConfig.chunkSize));
+  }
+
   trail() {
     // Trail which follows player - align pixel perfect moving position to grid.
     const gridAlignedPosition = this.position.alignToGrid(GameConfig.chunkSize);
-    if (!this.hasTrail() || !this.frontSegment().position.equals(gridAlignedPosition)) {
+    if (!this.hasTrail() || this.enteredNewChunk()) {
       this.segments.push(new Trail(gridAlignedPosition));
       this.position = gridAlignedPosition.add(GameConfig.chunkSize.divide(2));
       this.calculateVelocity();

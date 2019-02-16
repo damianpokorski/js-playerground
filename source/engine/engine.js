@@ -11,7 +11,7 @@ export default class Engine {
 
   loadGame(game) {
     this.game = game;
-    this.tick();
+    game.loadAssets().then(() => this.tick());
   }
 
   static requestFrame(callback) {

@@ -6,9 +6,15 @@ export default class SnakeGame {
   constructor() {
     this.init();
     Dom.Events.resize(() => this.init());
-
     this.font = 'Press Start 2P';
-    Dom.Helper.LoadGoogleFont(this.font);
+  }
+
+  loadAssets() {
+    return new Promise((resolve, reject) => {
+      Dom.Helper.LoadGoogleFont(this.font);
+      Dom.Events.loaded(resolve);
+      setTimeout(reject, 10000);
+    });
   }
 
   init() {

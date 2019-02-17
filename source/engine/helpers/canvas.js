@@ -34,10 +34,17 @@ class Canvas {
     return Canvas.context;
   }
 
-  static drawText(x, y, text, color = '#FFFFFF', fontSize = '32px', fontFamily = ' Arial') {
-    Canvas.ctx().fillStyle = color;
+  static drawText(x, y, text, style = '#FFFFFF', fontSize = '32px', fontFamily = ' Arial') {
+    Canvas.ctx().fillStyle = style;
     Canvas.ctx().font = `${fontSize} '${fontFamily}'`;
     Canvas.ctx().fillText(text, x, y);
+  }
+
+  static strokeText(x, y, strokeThickness, text, style = '#FFFFFF', fontSize = '32px', fontFamily = ' Arial') {
+    Canvas.ctx().strokeStyle = style;
+    Canvas.ctx().lineWidth = strokeThickness;
+    Canvas.ctx().font = `${fontSize} '${fontFamily}'`;
+    Canvas.ctx().strokeText(text, x, y);
   }
 }
 Canvas.Init();

@@ -1,17 +1,38 @@
 import {
-  Dom, Snake, Mouse, Canvas,
+  Dom, Snake, Mouse, Text,
 } from 'source/import';
+import { Vector } from '../import';
 
 export default class SnakeGame {
   constructor() {
     this.init();
     Dom.Events.resize(() => this.init());
-    this.font = 'Press Start 2P';
+    this.fontFamily = 'Press Start 2P';
+
+    this.scoreText = new Text({
+      position: new Vector(64, 96),
+      style: '#FFFFFF',
+      fontFamily: this.fontFamily,
+      fontSize: '24px',
+      text: 'Score...?',
+      strokeStyle: 'Dark Gray',
+      strokeThickness: 4,
+    });
+
+    this.scoreTextLabel = new Text({
+      position: new Vector(64, 64),
+      style: '#FFFFFF',
+      fontFamily: this.fontFamily,
+      fontSize: '18px',
+      text: 'Score',
+      strokeStyle: 'Dark Gray',
+      strokeThickness: 4,
+    });
   }
 
   loadAssets() {
     return new Promise((resolve, reject) => {
-      Dom.Helper.LoadGoogleFont(this.font);
+      Dom.Helper.LoadGoogleFont(this.fontFamily);
       Dom.Events.loaded(resolve);
       setTimeout(reject, 10000);
     });
@@ -37,8 +58,9 @@ export default class SnakeGame {
   }
 
   drawUI() {
-    Canvas.drawText(64, 64, 'Score', '#FFFFFF', '18px', this.font);
-    Canvas.drawText(64, 96, this.calculateScore(), '#FFFFFF', '24px', this.font);
+    this.scoreText.text = this.calculateScore();
+    this.scoreText.draw();
+    this.scoreTextLabel.draw();
   }
 
   update(delta) {

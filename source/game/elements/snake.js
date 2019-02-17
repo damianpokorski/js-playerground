@@ -30,7 +30,9 @@ class Snake extends Element {
     // Trail which follows player - align pixel perfect moving position to grid.
     const gridAlignedPosition = this.position.alignToGrid(GameConfig.chunkSize);
     if (!this.hasTrail() || this.enteredNewChunk()) {
-      this.segments.push(new Trail(gridAlignedPosition));
+      this.segments.push(new Trail({
+        position: gridAlignedPosition,
+      }));
       this.position = gridAlignedPosition.add(GameConfig.chunkSize.divide(2));
       this.calculateVelocity();
       this.previousDirection = this.direction;
@@ -104,9 +106,11 @@ class Snake extends Element {
 
     // create initial segments -shift them off
     const leftByOneChunk = GameConfig.chunkSize.multiply(Vector.right);
-    this.segments.push(new Trail(this.position.subtract(leftByOneChunk.multiply(0))));
-    this.segments.push(new Trail(this.position.subtract(leftByOneChunk.multiply(1))));
-    this.segments.push(new Trail(this.position.subtract(leftByOneChunk.multiply(2))));
+    for (let i = 0; i <= GameConfig.trailLength; i += 1) {
+      this.segments.push(new Trail({
+        position: this.position.subtract(leftByOneChunk.multiply(i)),
+      }));
+    }
 
     this.direction = Vector.right;
     this.previousDirection = Vector.right;

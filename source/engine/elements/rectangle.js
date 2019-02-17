@@ -1,10 +1,13 @@
 import { Element, Vector, Canvas } from 'source/import';
 
 class Rectangle extends Element {
-  constructor() {
-    super();
+  constructor(properties = {}) {
+    super(properties);
     this.velocity = new Vector(0, 0);
     this.dimensions = new Vector(0, 0);
+
+    // Injecting all properties at once
+    this.applyProperties(properties);
   }
 
   update(delta) {

@@ -1,10 +1,17 @@
-import { Vector, Canvas } from 'source/import';
+import { Vector, Canvas, GenericHelper } from 'source/import';
 
 class Element {
-  constructor() {
-    this.style = '#FF00FF';
+  constructor(properties = {}) {
+    this.style = '#FFFFFFF';
     this.position = new Vector(0, 0);
     this.velocity = new Vector(0, 0);
+
+    this.applyProperties(properties);
+  }
+
+  applyProperties(properties) {
+    // Injecting all properties at once
+    GenericHelper.applyProperties(this, properties);
   }
 
   applyVelocity(delta) {

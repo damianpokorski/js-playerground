@@ -1,4 +1,6 @@
-import { Vector, Canvas, GenericHelper } from 'source/import';
+import {
+  Dom, Vector, Canvas, GenericHelper,
+} from 'source/import';
 
 class Element {
   constructor(properties = {}) {
@@ -35,6 +37,25 @@ class Element {
 
   draw() {
     Error(`${this.constructor.name} - which inherits from Element, should not call super on draw function as it's a stub method.`);
+  }
+
+  /* eslint-disable class-methods-use-this, no-unused-vars */
+  // Method use
+  contains(vectorPoint) {
+    return false;
+  }
+  /* eslint-enable class-methods-use-this, no-unused-vars */
+
+  click(func) {
+    Dom.Events.click(clickedPoint => this.contains(clickedPoint) && func(clickedPoint));
+  }
+
+  mousemove(func) {
+    Dom.Events.mousemove(clickedPoint => this.contains(clickedPoint) && func(clickedPoint));
+  }
+
+  touchmove(func) {
+    Dom.Events.touchmove(clickedPoint => this.contains(clickedPoint) && func(clickedPoint));
   }
 }
 

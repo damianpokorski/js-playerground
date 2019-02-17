@@ -8,6 +8,7 @@ class Text extends Element {
     this.fontFamily = 'Halvetica';
     this.text = 'Sample Text';
     this.fontSize = '24px';
+    this.textAlign = 'left';
 
     // Stroke
     this.strokeThickness = 0;
@@ -31,6 +32,7 @@ class Text extends Element {
         this.strokeStyle,
         this.fontSize,
         this.fontFamily,
+        this.textAlign,
       );
     }
 
@@ -41,6 +43,7 @@ class Text extends Element {
       this.style,
       this.fontSize,
       this.fontFamily,
+      this.textAlign,
     );
   }
 }

@@ -31,6 +31,17 @@ class Rectangle extends Element {
     }
     return false;
   }
+
+  contains(vectorPoint) {
+    return this.position.x < vectorPoint.x
+      && this.position.y < vectorPoint.y
+      && this.dimensions.x + this.position.x > vectorPoint.x
+      && this.dimensions.y + this.position.y > vectorPoint.y;
+  }
+
+  center() {
+    return this.position.add(this.dimensions.divide(2));
+  }
 }
 
 export { Rectangle as default };

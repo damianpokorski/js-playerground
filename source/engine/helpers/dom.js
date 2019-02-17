@@ -1,4 +1,4 @@
-import 'source/import';
+import { Vector } from 'source/import';
 
 class Dom {
   static create(tag, properties = {}) {
@@ -36,13 +36,28 @@ function windowListener(eventName, func) {
 function documentListener(eventName, func) {
   return document.addEventListener(eventName, func, false);
 }
-
+const registeredEvents = {};
 Dom.Events = class {
+  static saveEventHandler(eventName, handler) {
+    if (registeredEvents[eventName] === undefined) {
+      registeredEvents[eventName] = [];
+    }
+    registeredEvents[eventName].push(handler);
+  }
+
+  static triggerEventHandler(eventName, event) {
+    if (!(registeredEvents[eventName] === undefined)) {
+      registeredEvents[eventName].forEach(handler => handler(event));
+    }
+  }
+
   static resize(func) {
+    Dom.Events.saveEventHandler('resize', func);
     windowListener('resize', func);
   }
 
   static loaded(func) {
+    Dom.Events.saveEventHandler('loaded', func);
     if (document.readyState === 'complete') {
       func();
       return;
@@ -55,15 +70,28 @@ Dom.Events = class {
   }
 
   static keyup(func) {
-    windowListener('keyup', func);
+    Dom.Events.saveEventHandler('keyup', func);
+    windowListener('keyup', e => func(e.key));
   }
 
   static keydown(func) {
-    windowListener('keydown', func);
+    Dom.Events.saveEventHandler('keydown', func);
+    windowListener('keydown', e => func(e.key));
   }
 
   static click(func) {
-    windowListener('click', func);
+    Dom.Events.saveEventHandler('click', func);
+    windowListener('click', e => func(new Vector(e.x, e.y)));
+  }
+
+  static mousemove(func) {
+    Dom.Events.saveEventHandler('mousemove', func);
+    windowListener('mousemove', e => func(new Vector(e.x, e.y)));
+  }
+
+  static touchmove(func) {
+    Dom.Events.saveEventHandler('touchmove', func);
+    windowListener('touchmove', e => func(new Vector(e.x, e.y)));
   }
 };
 

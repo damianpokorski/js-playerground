@@ -1,4 +1,4 @@
-import { Dom } from 'source/import';
+import { Dom, Vector } from 'source/import';
 
 class Canvas {
   static Init() {
@@ -34,19 +34,39 @@ class Canvas {
     return Canvas.context;
   }
 
-  static drawText(x, y, text, style = '#FFFFFF', fontSize = '32px', fontFamily = ' Arial') {
+  static drawText(x, y, text, style = '#FFFFFF', fontSize = '32px', fontFamily = ' Arial', textAlign = 'left') {
     Canvas.ctx().fillStyle = style;
     Canvas.ctx().font = `${fontSize} '${fontFamily}'`;
+    Canvas.ctx().textAlign = textAlign;
     Canvas.ctx().fillText(text, x, y);
   }
 
-  static strokeText(x, y, strokeThickness, text, style = '#FFFFFF', fontSize = '32px', fontFamily = ' Arial') {
+  static strokeText(x, y, strokeThickness, text, style = '#FFFFFF', fontSize = '32px', fontFamily = ' Arial', textAlign = 'left') {
     Canvas.ctx().strokeStyle = style;
     Canvas.ctx().lineWidth = strokeThickness;
     Canvas.ctx().font = `${fontSize} '${fontFamily}'`;
+    Canvas.ctx().textAlign = textAlign;
     Canvas.ctx().strokeText(text, x, y);
   }
 }
 Canvas.Init();
+
+Canvas.Corners = class {
+  static TopLeft() {
+    return new Vector(0, 0);
+  }
+
+  static TopRight() {
+    return new Vector(Canvas.size().x, 0);
+  }
+
+  static BottomLeft() {
+    return new Vector(0, Canvas.size().y);
+  }
+
+  static BottomRight() {
+    return new Vector(Canvas.size().x, Canvas.size().y);
+  }
+};
 
 export { Canvas as default };

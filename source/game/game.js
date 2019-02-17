@@ -1,12 +1,16 @@
 import {
-  Dom, Snake, Mouse, Text,
+  Dom, Snake, Mouse, Text, DPad, Vector,
 } from 'source/import';
-import { Vector } from '../import';
 
 export default class SnakeGame {
   constructor() {
     this.init();
     Dom.Events.resize(() => this.init());
+
+    // DPad
+    this.dpad = new DPad();
+
+    // Score text
     this.fontFamily = 'Press Start 2P';
 
     this.scoreText = new Text({
@@ -61,12 +65,14 @@ export default class SnakeGame {
     this.scoreText.text = this.calculateScore();
     this.scoreText.draw();
     this.scoreTextLabel.draw();
+    this.dpad.draw();
   }
 
   update(delta) {
     this.collide();
     this.player.update(delta);
     this.elements.forEach(e => e.update(delta));
+    this.dpad.update(delta);
   }
 
   collide() {

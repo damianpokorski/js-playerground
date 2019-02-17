@@ -38,8 +38,33 @@ export default class Vector {
       : new Vector(this.x / _divider, this.y / _divider);
   }
 
+  normal() {
+    const unit = Math.sqrt(this.x * this.x + this.y * this.y);
+    return new Vector(
+      this.x / unit,
+      this.y / unit,
+    );
+  }
+
+  distance(other) {
+    const absX = Math.abs(this.x - other.x);
+    const absY = Math.abs(this.y - other.y);
+    return Math.sqrt(absX * absX + absY * absY);
+  }
+
+  angle() {
+    return Math.atan2(this.y, this.x) * 180 / Math.PI;
+  }
+
   equals(other) {
     return this.x === other.x && this.y === other.y;
+  }
+
+  constrain(topLeft, bottomRight) {
+    return new Vector(
+      Math.min(Math.max(this.x, topLeft.x), bottomRight.x),
+      Math.min(Math.max(this.y, topLeft.y), bottomRight.y),
+    );
   }
 
   alignToGrid(_gridDimensions) {

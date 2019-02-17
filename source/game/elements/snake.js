@@ -11,7 +11,8 @@ class Snake extends Element {
     this.reset();
 
     // Events
-    Dom.Events.keyup(event => this.switchDirection(event));
+    Dom.Events.keyup(key => this.switchDirection(key));
+    // Dom.Events.keydown(key => this.switchDirection(key));
   }
 
   hasTrail() {
@@ -44,8 +45,8 @@ class Snake extends Element {
     }
   }
 
-  switchDirection(keyEvent) {
-    switch (keyEvent.key) {
+  switchDirection(key) {
+    switch (key) {
       case 'ArrowUp':
         this.direction = this.previousDirection.equals(Vector.down) ? Vector.down : Vector.up;
         break;

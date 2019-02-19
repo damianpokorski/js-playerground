@@ -60,11 +60,31 @@ export default class Vector {
     return this.x === other.x && this.y === other.y;
   }
 
+  abs() {
+    return new Vector(Math.abs(this.x), Math.abs(this.y));
+  }
+
   constrain(topLeft, bottomRight) {
     return new Vector(
       Math.min(Math.max(this.x, topLeft.x), bottomRight.x),
       Math.min(Math.max(this.y, topLeft.y), bottomRight.y),
     );
+  }
+
+  constrainScreen(){
+    return this.constrain(Vector.zero, new Vector(Canvas.size().x, Canvas.size().y));
+  }
+
+  wrapScreen() {
+    this.x = this.x % Canvas.size().x;
+    this.y = this.y % Canvas.size().y;
+    while (this.x < 0) {
+      this.x += Canvas.size().x;
+    }
+    while (this.y < 0) {
+      this.y += Canvas.size().y;
+    }
+    return this.clone();
   }
 
   alignToGrid(_gridDimensions) {
@@ -98,6 +118,7 @@ export default class Vector {
     return `X: ${this.x} Y: ${this.y}`;
   }
 }
+Vector.zero = new Vector(0, 0);
 Vector.up = new Vector(0, -1);
 Vector.down = new Vector(0, 1);
 Vector.left = new Vector(-1, 0);

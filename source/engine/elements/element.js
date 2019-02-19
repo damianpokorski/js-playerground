@@ -21,8 +21,7 @@ class Element {
   }
 
   wrapScreen() {
-    this.position.x = this.position.x > 0 ? this.position.x % Canvas.size().x : this.position.x + Canvas.size().x;
-    this.position.y = this.position.y > 0 ? this.position.y % Canvas.size().y : this.position.y + Canvas.size().y;
+    this.position.wrapScreen();
   }
 
   update(delta) {

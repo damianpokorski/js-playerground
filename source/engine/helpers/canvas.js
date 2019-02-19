@@ -8,6 +8,7 @@ class Canvas {
     Canvas.context = Canvas.dom.getContext('2d');
     Canvas.resize();
     Dom.Events.resize(Canvas.resize);
+    Canvas.resize();
   }
 
   static resize() {
@@ -20,9 +21,17 @@ class Canvas {
 
   static size() {
     return {
-      x: Canvas.context.width,
+      x: Canvas.context.width, 
       y: Canvas.context.height,
     };
+  }
+
+  static isLandscape() {
+    return this.size().x >= this.size().y;
+  }
+
+  static isPortrait() {
+    return this.size().x < this.size().y;
   }
 
   static clear() {

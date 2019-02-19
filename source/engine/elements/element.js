@@ -21,14 +21,8 @@ class Element {
   }
 
   wrapScreen() {
-    this.position.x = this.position.x % Canvas.size().x;
-    this.position.y = this.position.y % Canvas.size().y;
-    while (this.position.x < 0) {
-      this.position.x += Canvas.size().x;
-    }
-    while (this.position.y < 0) {
-      this.position.y += Canvas.size().y;
-    }
+    this.position.x = this.position.x > 0 ? this.position.x % Canvas.size().x : this.position.x + Canvas.size().x;
+    this.position.y = this.position.y > 0 ? this.position.y % Canvas.size().y : this.position.y + Canvas.size().y;
   }
 
   update(delta) {
@@ -52,6 +46,14 @@ class Element {
 
   mousemove(func) {
     Dom.Events.mousemove(clickedPoint => this.contains(clickedPoint) && func(clickedPoint));
+  }
+
+  touchstart(func) {
+    Dom.Events.touchstart(clickedPoint => this.contains(clickedPoint) && func(clickedPoint));
+  }
+
+  touchend(func) {
+    Dom.Events.touchend(clickedPoint => this.contains(clickedPoint) && func(clickedPoint));
   }
 
   touchmove(func) {

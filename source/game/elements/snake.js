@@ -38,7 +38,6 @@ class Snake extends Element {
       this.calculateVelocity();
       this.previousDirection = this.direction;
     }
-
     // Limit trail to the specific length
     while (this.segments.length > this.trailLength) {
       this.segments.shift();
@@ -76,10 +75,10 @@ class Snake extends Element {
 
   update(delta) {
     super.update(delta);
+    // this.segments.forEach(segment => segment.update(delta));
     this.collideWithSelf();
     this.wrapScreen();
     this.trail();
-    this.segments.forEach(segment => segment.update(delta));
   }
 
   collide(other) {

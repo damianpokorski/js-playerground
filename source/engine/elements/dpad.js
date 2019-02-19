@@ -10,32 +10,38 @@ class DPad extends Element {
     // Dpad BG
     this.background = new Circle({
       style: 'rgba(255, 255, 255, 0.25)',
-      radius: 64,
+      radius: Canvas.size().x / 5,
     });
     this.background.click(v => this.clicked(v));
     this.background.mousemove(v => this.clicked(v));
+    this.background.touchstart(v => this.clicked(v));
+    this.background.touchend(v => this.clicked(v));
     this.background.touchmove(v => this.clicked(v));
+    this.background.touchstart(v => console.log(v, 'touch started!'));
+    this.background.touchend(v => console.log(v, 'touch touchend!'));
+    this.background.touchmove(v => console.log(v, 'touch touchmove!'));
 
     // DPad Controller Knob
     this.foreground = new Circle({
       style: 'rgba(0, 0, 0, 0.5)',
-      radius: 16,
+      radius: Canvas.size().x / 10,
     });
 
     // Text
     this.directionText = new Text({
-      position: this.background.center().add(new Vector(0, 8)),
+      position: this.background.center().add(new Vector(0, 16)),
       style: 'rgba(255, 255, 255, 0.75)',
       fontFamily: 'Press Start 2P',
-      fontSize: '16px',
-      text: 'RIGHT?',
+      fontSize: '32px',
+      text: '',
       textAlign: 'center',
     });
 
     // Position dynamically based on screen dimensions
     const repositionElements = () => {
-      this.background.position = Canvas.Corners.BottomRight().subtract(128);
-      this.foreground.position = Canvas.Corners.BottomRight().subtract(192).add(48);
+      this.background.radius = Canvas.size().x / 5;
+      this.background.position = Canvas.Corners.BottomRight().subtract(this.background.radius).subtract(16);
+      this.foreground.position = this.background.center();
       this.directionText.position = this.background.center().add(new Vector(0, 8));
     };
     repositionElements();
@@ -43,8 +49,6 @@ class DPad extends Element {
 
     // Injecting all properties at once
     this.applyProperties(properties);
-
-    console.log(this.velocity);
   }
 
   update(delta) {

@@ -89,6 +89,16 @@ Dom.Events = class {
     windowListener('mousemove', e => func(new Vector(e.x, e.y)));
   }
 
+  static touchstart(func) {
+    Dom.Events.saveEventHandler('touchstart', func);
+    windowListener('touchstart', e => func(new Vector(e.x, e.y)));
+  }
+
+  static touchend(func) {
+    Dom.Events.saveEventHandler('touchend', func);
+    windowListener('touchend', e => func(new Vector(e.x, e.y)));
+  }
+
   static touchmove(func) {
     Dom.Events.saveEventHandler('touchmove', func);
     windowListener('touchmove', e => func(new Vector(e.x, e.y)));

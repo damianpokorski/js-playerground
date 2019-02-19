@@ -1,8 +1,16 @@
 import { Element, Vector, Canvas } from 'source/import';
 
+let idIncrement = 0;
+
+const idGenerator = () => {
+  idIncrement += 1;
+  return idIncrement;
+};
+
 class Rectangle extends Element {
   constructor(properties = {}) {
     super(properties);
+    this.id = idGenerator();
     this.velocity = new Vector(0, 0);
     this.dimensions = new Vector(0, 0);
 
@@ -23,9 +31,9 @@ class Rectangle extends Element {
   collide(other) {
     if (
       this.position.x < other.position.x + other.dimensions.x
-            && this.position.y < other.position.y + other.dimensions.y
-            && this.position.x + this.dimensions.x > other.position.x
-            && this.position.y + this.dimensions.y > other.position.y
+      && this.position.x + this.dimensions.x > other.position.x
+      && this.position.y < other.position.y + other.dimensions.y
+      && this.position.y + this.dimensions.y > other.position.y
     ) {
       return true;
     }

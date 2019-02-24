@@ -7,12 +7,12 @@ import * as GameConfig from 'source/game/config';
 class Snake extends Element {
   constructor() {
     super();
-    // Assume defaults
-    this.reset();
 
     // Events
     Dom.Events.keyup(key => this.switchDirection(key));
-    // Dom.Events.keydown(key => this.switchDirection(key));
+    
+    // Assume defaults
+    this.reset();
   }
 
   hasTrail() {
@@ -23,25 +23,28 @@ class Snake extends Element {
     return this.segments[this.segments.length - 1];
   }
 
-  enteredNewChunk() {
-    return !this.frontSegment().position.equals(this.position.alignToGrid(GameConfig.chunkSize));
+  calculateSpeed() {
+    return 1 / (GameConfig.playerSpeed + this.segments.length);
   }
 
-  trail() {
-    // Trail which follows player - align pixel perfect moving position to grid.
-    const gridAlignedPosition = this.position.alignToGrid(GameConfig.chunkSize).wrapScreen();
-    if (!this.hasTrail() || this.enteredNewChunk()) {
+  trail(delta = 0) {
+    this.speed -= delta;
+    if (this.speed < 0) {
+      this.speed = this.calculateSpeed();
+
       this.segments.push(new Trail({
-        position: gridAlignedPosition,
+        position: this.frontSegment().position
+          .add(GameConfig.chunkSize.multiply(this.direction))
+          .wrapScreen()
+          .constrainScreen()
+          .alignToGrid(GameConfig.chunkSize),
       }));
-      
-      this.position = gridAlignedPosition.add(GameConfig.chunkSize.divide(2)).constrainScreen();
-      
-      this.calculateVelocity();
+
       this.previousDirection = this.direction;
     }
+
     // Limit trail to the specific length
-    while (this.segments.length > this.trailLength) {
+    if (this.segments.length > this.trailLength) {
       this.segments.shift();
     }
   }
@@ -49,10 +52,10 @@ class Snake extends Element {
   switchDirection(key) {
     switch (key) {
       case 'ArrowUp':
-        this.direction = this.previousDirection.equals(Vector.up) ? Vector.up : Vector.up;
+        this.direction = this.previousDirection.equals(Vector.down) ? Vector.down : Vector.up;
         break;
       case 'ArrowDown':
-      this.direction = this.previousDirection.equals(Vector.down) ? Vector.down : Vector.down;
+        this.direction = this.previousDirection.equals(Vector.up) ? Vector.up : Vector.down;
         break;
       case 'ArrowLeft':
         this.direction = this.previousDirection.equals(Vector.right) ? Vector.right : Vector.left;
@@ -61,24 +64,17 @@ class Snake extends Element {
         this.direction = this.previousDirection.equals(Vector.left) ? Vector.left : Vector.right;
         break;
       default:
-        return;
     }
-    this.calculateVelocity();
   }
 
-  calculateVelocity() {
-    this.speed = GameConfig.playerSpeed + (GameConfig.playerSpeedBoost) * this.segments.length;
-    this.velocity = this.direction.multiply(this.speed);
-  }
 
   draw() {
     this.segments.forEach(segment => segment.draw());
   }
 
   update(delta) {
-    super.update(delta);
-    this.wrapScreen();
-    this.trail();
+    // super.update(delta);
+    this.trail(delta);
     this.collideWithSelf();
   }
 
@@ -90,7 +86,6 @@ class Snake extends Element {
     for (let x = 0; x < this.segments.length; x += 1) {
       for (let y = x + 1; y < this.segments.length; y += 1) {
         if (this.segments[x].collide(this.segments[y])) {
-          console.log([x, y, this.segments.map(x => x.position), this.position]);
           this.reset();
         }
       }
@@ -99,24 +94,24 @@ class Snake extends Element {
 
   reset() {
     // Reset all of the properties
-    this.trailLength = 3;
+    this.trailLength = GameConfig.trailLength;
     this.segments = [];
-    this.speed = GameConfig.playerSpeed;
     this.position = Vector
       .randomWithinCanvas(GameConfig.chunkSize.x)
       .alignToGrid(GameConfig.chunkSize);
 
     // create initial segments -shift them off
-    const leftByOneChunk = GameConfig.chunkSize.multiply(Vector.up);
+    const upByOneChunk = GameConfig.chunkSize.multiply(Vector.up);
     for (let i = 0; i <= GameConfig.trailLength; i += 1) {
       this.segments.push(new Trail({
-        position: this.position.subtract(leftByOneChunk.multiply(i)),
+        position: this.position.subtract(upByOneChunk.multiply(i)).wrapScreen(),
       }));
     }
 
-    this.direction = Vector.up;
-    this.previousDirection = Vector.up;
-    this.calculateVelocity();
+    
+    this.speed = this.calculateSpeed();
+    this.direction = Vector.down;
+    this.previousDirection = Vector.left;
   }
 }
 

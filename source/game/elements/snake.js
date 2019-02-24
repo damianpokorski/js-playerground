@@ -108,7 +108,6 @@ class Snake extends Element {
       }));
     }
 
-    
     this.speed = this.calculateSpeed();
     this.direction = Vector.down;
     this.previousDirection = Vector.left;

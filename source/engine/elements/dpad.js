@@ -17,11 +17,6 @@ class DPad extends Element {
     this.background.touchstart(v => this.clicked(v));
     this.background.touchend(v => this.clicked(v));
     this.background.touchmove(v => this.clicked(v));
-    this.background.click(v => console.log(v, 'click started!'));
-    this.background.mousemove(v => console.log(v, 'mousemove started!'));
-    this.background.touchstart(v => console.log(v, 'touch started!'));
-    this.background.touchend(v => console.log(v, 'touch touchend!'));
-    this.background.touchmove(v => console.log(v, 'touch touchmove!'));
 
     // DPad Controller Knob
     this.foreground = new Circle({

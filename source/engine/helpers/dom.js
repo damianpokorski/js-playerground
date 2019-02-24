@@ -27,6 +27,10 @@ Dom.Get = class {
   static head() {
     return Dom.Get.firstOfTag('head');
   }
+
+  static canvas() {
+    return Dom.Get.firstOfTag('canvas');
+  }
 };
 
 function windowListener(eventName, func) {
@@ -36,6 +40,11 @@ function windowListener(eventName, func) {
 function documentListener(eventName, func) {
   return document.addEventListener(eventName, func, false);
 }
+
+function canvasListener(eventName, func) {
+  return Dom.Get.canvas().addEventListener(eventName, func, false);
+}
+
 const registeredEvents = {};
 Dom.Events = class {
   static saveEventHandler(eventName, handler) {
@@ -86,22 +95,28 @@ Dom.Events = class {
 
   static mousemove(func) {
     Dom.Events.saveEventHandler('mousemove', func);
-    windowListener('mousemove', e => func(new Vector(e.x, e.y)));
+    canvasListener('mousemove', e => func(new Vector(e.x, e.y)));
   }
 
   static touchstart(func) {
     Dom.Events.saveEventHandler('touchstart', func);
-    windowListener('touchstart', e => func(new Vector(e.x, e.y)));
+    canvasListener('touchend', e => Array
+      .from(e.touches)
+      .forEach(t => func(new Vector(t.pageX, t.pageY))));
   }
 
   static touchend(func) {
     Dom.Events.saveEventHandler('touchend', func);
-    windowListener('touchend', e => func(new Vector(e.x, e.y)));
+    canvasListener('touchend', e => Array
+      .from(e.touches)
+      .forEach(t => func(new Vector(t.pageX, t.pageY))));
   }
 
   static touchmove(func) {
     Dom.Events.saveEventHandler('touchmove', func);
-    windowListener('touchmove', e => func(new Vector(e.x, e.y)));
+    canvasListener('touchmove', e => Array
+      .from(e.touches)
+      .forEach(t => func(new Vector(t.pageX, t.pageY))));
   }
 };
 

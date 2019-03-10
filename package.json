@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx webpack --config webpack.config.js --mode development --watch",
+    "dev-serve": "npx concurrently \"npm run dev\" \"serve\"",
     "build": "npx webpack --config webpack.config.js --mode production",
     "lint": "npx -c 'eslint source/* --quiet' --quiet",
     "lint-watch": "npx esw --quiet source/* --watch --clear --cache"
@@ -33,6 +34,7 @@
     "webpack-cli": "^3.2.3"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.2.5"
+    "@babel/polyfill": "^7.2.5",
+    "concurrently": "^4.1.0"
   }
 }

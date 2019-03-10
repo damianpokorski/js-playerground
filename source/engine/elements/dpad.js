@@ -18,12 +18,6 @@ class DPad extends Element {
     this.background.touchend(v => this.clicked(v));
     this.background.touchmove(v => this.clicked(v));
 
-    Dom.Events.click(v => console.log(v, 'click started!'));
-    Dom.Events.mousemove(v => console.log(v, 'mousemove started!'));
-    Dom.Events.touchstart(v => console.log(v, 'touch started!'));
-    Dom.Events.touchend(v => console.log(v, 'touch touchend!'));
-    Dom.Events.touchmove(v => console.log(v, 'touch touchmove!'));
-
     // DPad Controller Knob
     this.foreground = new Circle({
       style: 'rgba(0, 0, 0, 0.5)',
@@ -44,8 +38,11 @@ class DPad extends Element {
     const repositionElements = () => {
       this.background.radius = Canvas.size().x / 5;
       this.background.position = Canvas.Corners.BottomRight().subtract(this.background.radius).subtract(16);
+      this.foreground.radius = Canvas.size().x / 10;
       this.foreground.position = this.background.center();
-      this.directionText.position = this.background.center().add(new Vector(0, 8));
+      const fontSize = Canvas.size().x / 15;
+      this.directionText.position = this.background.center().add(new Vector(0, fontSize / 2));
+      this.directionText.fontSize = `${fontSize }px`;
     };
     repositionElements();
     Dom.Events.resize(repositionElements);

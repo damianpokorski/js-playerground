@@ -13,7 +13,21 @@ export default class SnakeGame {
 
     // Score text
     this.fontFamily = 'Press Start 2P';
+  }
 
+  loadAssets() {
+    return new Promise((resolve, reject) => {
+      Dom.Helper.LoadGoogleFont(this.fontFamily);
+      Dom.Events.loaded(resolve);
+      setTimeout(reject, 10000);
+    });
+  }
+
+  init() {
+    // Register player
+    this.player = new Snake();
+
+    // Score board
     this.scoreText = new Text({
       position: new Vector(64, 96),
       style: '#FFFFFF',
@@ -33,19 +47,6 @@ export default class SnakeGame {
       strokeStyle: 'Dark Gray',
       strokeThickness: 4,
     });
-  }
-
-  loadAssets() {
-    return new Promise((resolve, reject) => {
-      Dom.Helper.LoadGoogleFont(this.fontFamily);
-      Dom.Events.loaded(resolve);
-      setTimeout(reject, 10000);
-    });
-  }
-
-  init() {
-    // Register player
-    this.player = new Snake();
 
     // Add some mice
     this.elements = [];
